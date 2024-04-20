@@ -1,5 +1,6 @@
 import UserModel from "@/models/User";
 import connectToDB from "@/configs/db";
+import { hashPasword } from "@/utils/auth";
 
 const handler = async (req, res) => {
     if (req.method !== "POST") {
@@ -29,10 +30,18 @@ const handler = async (req, res) => {
         }
 
         // HashPassword
+        const hashedPassword = await hashPasword(password)
         // GenerateToken
         // Create
 
-        await UserModel.create({ firstname, lastname, username, email, password, role: "USER" })
+        await UserModel.create({
+            firstname,
+            lastname,
+            username,
+            email,
+            password: hashedPassword,
+            role: "USER"
+        })
         return res.status(201)
             .json({ message: "User created successfully :))" })
 
