@@ -18,6 +18,16 @@ const handler = async (req, res) => {
         }
 
         // isUserExist
+        const isUserExist = await UserModel.findOne({
+            $or: [{ username }, { email }],
+        })
+
+        if (isUserExist) {
+            return res
+                .status(422)
+                .json({ message: "This username or email already exist" })
+        }
+
         // HashPassword
         // GenerateToken
         // Create
