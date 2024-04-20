@@ -1,4 +1,5 @@
 import { hash } from "bcrypt";
+import { sign } from "jsonwebtoken";
 
 const hashPasword = async (password) => {
 
@@ -6,4 +7,14 @@ const hashPasword = async (password) => {
 
     return hashedPassword;
 }
-export { hashPasword };
+
+const generateToken = (data) => {
+    const token = sign({ ...data }, process.env.privateKey, {
+      // algorithm: ''
+      expiresIn: "24h",
+    });
+  
+    return token;
+  };
+
+export { hashPasword, generateToken };

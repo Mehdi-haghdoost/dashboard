@@ -1,6 +1,6 @@
 import UserModel from "@/models/User";
 import connectToDB from "@/configs/db";
-import { hashPasword } from "@/utils/auth";
+import { generateToken, hashPassword } from "@/utils/auth";
 
 const handler = async (req, res) => {
     if (req.method !== "POST") {
@@ -30,8 +30,12 @@ const handler = async (req, res) => {
         }
 
         // HashPassword
-        const hashedPassword = await hashPasword(password)
+        const hashedPassword = await hashPassword(password)
+
+
         // GenerateToken
+        const token = generateToken({ email });
+        console.log(token);
         // Create
 
         await UserModel.create({
@@ -41,13 +45,15 @@ const handler = async (req, res) => {
             email,
             password: hashedPassword,
             role: "USER"
-        })
+        });
+
+        
         return res.status(201)
-            .json({ message: "User created successfully :))" })
+            .json({ message: "User created successfully :))"})
 
     } catch (err) {
         return res.status(500)
-            .json({ message: "Unknow Internal Server Error !!" })
+            .json({ message: "Unknow Internal Server Error !!",error:err })
     }
 }
 export default handler;
