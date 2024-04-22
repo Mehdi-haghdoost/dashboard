@@ -1,7 +1,7 @@
 import UserModel from "@/models/User";
 import connectToDB from "@/configs/db";
-import { generateToken, hashPassword } from "@/utils/auth";
-
+import { generateToken, hashPasword } from "@/utils/auth";
+import { serialize } from "cookie";
 const handler = async (req, res) => {
     if (req.method !== "POST") {
         return false;
@@ -29,8 +29,8 @@ const handler = async (req, res) => {
                 .json({ message: "This username or email already exist" })
         }
 
-        // HashPassword
-        const hashedPassword = await hashPassword(password)
+        // HashPasword
+        const hashedPassword = await hashPasword(password)
 
 
         // GenerateToken
@@ -47,13 +47,19 @@ const handler = async (req, res) => {
             role: "USER"
         });
 
-        
-        return res.status(201)
-            .json({ message: "User created successfully :))"})
+
+        return res
+            .setHeader('Set-Cookie', serialize('token', token, {
+                httpOnly: true,
+                path: '/',
+                maxAge: 60 * 60 * 24
+            }))
+            .status(201)
+            .json({ message: "User created successfully :))" })
 
     } catch (err) {
         return res.status(500)
-            .json({ message: "Unknow Internal Server Error !!",error:err })
+            .json({ message: "Unknow Internal Server Error !!", error: err })
     }
 }
 export default handler;
