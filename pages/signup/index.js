@@ -41,6 +41,9 @@ function Index() {
 
       alert('user created successfully :))')
       router.replace('/dashboard')
+
+    } else if (res.status === 422) {
+      alert("This username or email already exist")
     }
   }
 
