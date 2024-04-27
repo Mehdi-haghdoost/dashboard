@@ -1,6 +1,10 @@
 import connectToDB from "@/configs/db";
 import UserModel from "@/models/User";
 import { generateToken, verifyPassword } from "@/utils/auth";
+import { serialize } from "cookie";
+
+
+
 const handler = async (req, res) => {
     if (req.method !== 'POST') {
         return false;
@@ -9,14 +13,14 @@ const handler = async (req, res) => {
     try {
         connectToDB();
 
-        const { identifirer, password } = req.body;
+        const { identifier, password } = req.body;
 
-        if (!identifirer.trim() || !password.trim()) {
+        if (!identifier.trim() || !password.trim()) {
             return res.status(422).json({ message: "Data is not valid !!" })
         }
 
         const user = await UserModel.findOne({
-            $or: [{ username: identifirer }, { email: identifirer }]
+            $or: [{ username: identifier }, { email: identifier }]
         })
 
         if (!user) {
@@ -24,6 +28,7 @@ const handler = async (req, res) => {
         }
 
         const isValidPassword = await verifyPassword(password, user.password)
+        
 
         if (!isValidPassword) {
             return res.status(422).json({ message: "Username or Password is not correct" })
@@ -43,7 +48,7 @@ const handler = async (req, res) => {
 
     } catch (error) {
         return res.status(500)
-            .json({ message: "Unknow Internal Server Error !!", error: err })
+            .json({ message: "Unknow Internal Server Error !!" })
     }
 }
 export default handler;
