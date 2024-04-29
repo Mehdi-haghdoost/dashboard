@@ -82,14 +82,14 @@ function Index() {
             }
           </>
           {/* User is login & admin */}
-          {/* <li>
+          <li>
             <Link href="/p-admin">
               <span>
                 <FontAwesomeIcon icon={faSolarPanel} />
               </span>
               Admin panel
             </Link>
-          </li> */}
+          </li>
         </ul>
         <img className="wave" src="/Images/wave.svg" alt="wave" />
       </aside>
