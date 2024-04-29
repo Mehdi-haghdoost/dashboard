@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 function Index() {
 
@@ -7,6 +7,13 @@ function Index() {
   const [password, setPassword] = useState('')
 
   const router = useRouter()
+
+  useEffect( async () => {
+    const res = await fetch('/api/auth/me')
+    if(res.status ===200) {
+      router.replace('/dashboard')
+    }
+  }, [])
 
   const signIn = async (event) => {
     event.preventDefault();
