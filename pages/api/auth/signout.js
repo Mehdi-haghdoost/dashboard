@@ -1,4 +1,16 @@
+import { serialize } from "cookie";
+
 const handler = (req, res) => {
-    // codes
+    if (req.method !== "GET") {
+        return false;
+    }
+    return res
+        .setHeader('Set-Cookie', serialize('token', "", {
+            path: '/',
+            maxAge: 0
+        }))
+        .status(200)
+        .json({ message: "User Logged out successfully :))" })
+
 }
 export default handler;
